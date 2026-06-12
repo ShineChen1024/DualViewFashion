@@ -52,9 +52,9 @@ The optional video extension uses multiple reference frames as sparse temporal c
 
 | Reference Frames | Generated Video |
 |:---:|:---:|
-| <img src="assets/video/ref_0250.jpg" width="96"> <img src="assets/video/ref_0500.jpg" width="96"> <img src="assets/video/ref_0750.jpg" width="96"> | <video src="https://github.com/ShineChen1024/DualViewFashion/raw/main/assets/video/dualviewfashion_video_example.mp4" controls playsinline width="300"></video><br>[View MP4](https://github.com/ShineChen1024/DualViewFashion/raw/main/assets/video/dualviewfashion_video_example.mp4) |
+| <img src="assets/video/ref_0250.jpg" width="96"> <img src="assets/video/ref_0500.jpg" width="96"> <img src="assets/video/ref_0750.jpg" width="96"> | <img src="assets/video/dualviewfashion_video_preview.gif" width="300"><br>[Download MP4](assets/video/dualviewfashion_video_example.mp4) |
 
-The current video demo is a 10-second, 161-frame generation. We plan to release a 10-second, 241-frame version in a future checkpoint release. GitHub may render the MP4 inline via the video tag; the direct MP4 link is kept as a fallback.
+The current video demo is a 10-second, 161-frame generation. We plan to release a 10-second, 241-frame version in a future checkpoint release. The README uses a compact animated preview for reliable inline playback; the original MP4 is kept as a downloadable asset.
 
 ## Quick Start
 

@@ -16,5 +16,6 @@
   "frames": 161,
   "duration_seconds": 10,
   "future_plan": "Release a 241-frame, 10-second version in a future checkpoint release.",
-  "note": "The first reference frame is omitted from the README display to keep the video example compact."
+  "note": "The first reference frame is omitted from the README display to keep the video example compact. The README uses an animated GIF preview because GitHub may download repository MP4 files instead of playing them inline.",
+  "readme_preview": "assets/video/dualviewfashion_video_preview.gif"
 }
