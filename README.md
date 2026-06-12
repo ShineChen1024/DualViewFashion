@@ -41,20 +41,20 @@ Each example below is generated from the 1024-resolution evaluation setting. The
 
 | Example | Generated multi-view canvas |
 |:---:|:---:|
-| Example 1 | <img src="assets/examples/example_01.jpg" width="620"> |
-| Example 2 | <img src="assets/examples/example_02.jpg" width="620"> |
-| Example 3 | <img src="assets/examples/example_03.jpg" width="620"> |
+| Example 1 | <img src="assets/examples/example_01.jpg" width="460"> |
+| Example 2 | <img src="assets/examples/example_02.jpg" width="460"> |
+| Example 3 | <img src="assets/examples/example_03.jpg" width="460"> |
 
 
 ### Video Example
 
-The optional video extension uses multiple reference frames as sparse temporal conditions. The example below is generated from four reference frames placed at relative positions `0`, `0.25`, `0.5`, and `0.75`.
+The optional video extension uses multiple reference frames as sparse temporal conditions. The example below shows three reference frames placed at relative positions `0.25`, `0.5`, and `0.75`.
 
 | Reference Frames | Generated Video |
 |:---:|:---:|
-| <img src="assets/video/ref_0000.jpg" width="120"> <img src="assets/video/ref_0250.jpg" width="120"> <img src="assets/video/ref_0500.jpg" width="120"> <img src="assets/video/ref_0750.jpg" width="120"> | <video src="assets/video/dualviewfashion_video_example.mp4" controls width="320"></video><br>[View MP4](assets/video/dualviewfashion_video_example.mp4) |
+| <img src="assets/video/ref_0250.jpg" width="96"> <img src="assets/video/ref_0500.jpg" width="96"> <img src="assets/video/ref_0750.jpg" width="96"> | <video src="https://github.com/ShineChen1024/DualViewFashion/raw/main/assets/video/dualviewfashion_video_example.mp4" controls playsinline width="300"></video><br>[View MP4](https://github.com/ShineChen1024/DualViewFashion/raw/main/assets/video/dualviewfashion_video_example.mp4) |
 
-The current video demo is a 10-second, 161-frame generation. We plan to release a 10-second, 241-frame version in a future checkpoint release.
+The current video demo is a 10-second, 161-frame generation. We plan to release a 10-second, 241-frame version in a future checkpoint release. GitHub may render the MP4 inline via the video tag; the direct MP4 link is kept as a fallback.
 
 ## Quick Start
 
