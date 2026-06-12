@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.DS_Store
+.venv/
+venv/
+outputs/
+checkpoints/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.mp4

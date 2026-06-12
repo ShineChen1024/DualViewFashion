@@ -1,0 +1,9 @@
+torch>=2.6.0
+# Tested with diffusers 0.39.0.dev0.
+diffusers>=0.38.0
+transformers>=4.45.0
+accelerate>=1.13.0
+safetensors>=0.4.0
+peft>=0.19.0
+Pillow>=10.0.0
+diffsynth>=2.0.12
