@@ -41,9 +41,20 @@ Each example below is generated from the 1024-resolution evaluation setting. The
 
 | Example | Generated multi-view canvas |
 |:---:|:---:|
-| Example 1 | <img src="assets/examples/example_01.png" width="760"> |
-| Example 2 | <img src="assets/examples/example_02.png" width="760"> |
-| Example 3 | <img src="assets/examples/example_03.png" width="760"> |
+| Example 1 | <img src="assets/examples/example_01.jpg" width="620"> |
+| Example 2 | <img src="assets/examples/example_02.jpg" width="620"> |
+| Example 3 | <img src="assets/examples/example_03.jpg" width="620"> |
+
+
+### Video Example
+
+The optional video extension uses multiple reference frames as sparse temporal conditions. The example below is generated from four reference frames placed at relative positions `0`, `0.25`, `0.5`, and `0.75`.
+
+| Reference Frames | Generated Video |
+|:---:|:---:|
+| <img src="assets/video/ref_0000.jpg" width="120"> <img src="assets/video/ref_0250.jpg" width="120"> <img src="assets/video/ref_0500.jpg" width="120"> <img src="assets/video/ref_0750.jpg" width="120"> | <video src="assets/video/dualviewfashion_video_example.mp4" controls width="320"></video><br>[View MP4](assets/video/dualviewfashion_video_example.mp4) |
+
+The current video demo is a 10-second, 161-frame generation. We plan to release a 10-second, 241-frame version in a future checkpoint release.
 
 ## Quick Start
 
@@ -88,7 +99,7 @@ python video_inference.py \
   --output outputs/dualviewfashion_video.mp4
 ```
 
-The video LoRA checkpoints are coming soon. The LoRA paths above are placeholders until checkpoints are published.
+The video LoRA checkpoints are coming soon. The LoRA paths above are placeholders until checkpoints are published. Current video inference examples use 161 frames for 10-second generation; a 241-frame, 10-second version is planned.
 
 ## Checkpoints
 

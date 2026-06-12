@@ -1,0 +1,21 @@
+{
+  "sample": "video_example_01",
+  "prompt": "a fashion model walks in from the left side, poses, turns around, and walks out",
+  "reference_images": [
+    "assets/video/ref_0000.jpg",
+    "assets/video/ref_0250.jpg",
+    "assets/video/ref_0500.jpg",
+    "assets/video/ref_0750.jpg"
+  ],
+  "frame_positions": [
+    0.0,
+    0.25,
+    0.5,
+    0.75
+  ],
+  "output": "assets/video/dualviewfashion_video_example.mp4",
+  "seed": 0,
+  "frames": 161,
+  "duration_seconds": 10,
+  "future_plan": "Release a 241-frame, 10-second version in a future checkpoint release."
+}
