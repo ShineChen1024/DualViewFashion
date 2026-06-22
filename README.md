@@ -27,10 +27,10 @@ This is **not** a virtual try-on or person-inpainting pipeline. DualViewFashion 
 - [x] Image inference code release
 - [x] Wan2.2 multi-frame reference video inference code release
 - [x] Example gallery release
-- [ ] Low-resolution checkpoint release (512 x 384)
+- [x] Low-resolution checkpoint release (512 x 384)
 - [ ] High-resolution checkpoint release (1024 x 768)
-- [ ] Image training code release
-- [ ] Wan2.2 video checkpoint release
+- [x] Image training code release
+- [x] Wan2.2 video checkpoint release
 - [ ] Wan2.2 video training code release
 - [ ] Dataset release
 - [ ] Model-identity conditioned generation
@@ -71,16 +71,16 @@ DualViewFashion image inference was tested with `diffusers` `0.39.0.dev0` and a 
 ### Image Inference
 
 ```bash
-python inference.py \
+python inference_caption.py \
   --garment_front path/to/garment_front.jpg \
   --garment_back path/to/garment_back.jpg \
   --model_path path/to/FLUX.1-Fill-dev \
-  --lora_path path/to/dualviewfashion-highres-lora \
+  --lora_path ShineChen1024/DualViewFashion \
   --output outputs/dualviewfashion_grid.png \
   --cloth_type "dress" \
   --gender "female" \
   --steps 50 \
-  --guidance_scale 1.0 \
+  --guidance_scale 30.0 \
   --seed 0
 ```
 
@@ -99,15 +99,17 @@ python video_inference.py \
   --output outputs/dualviewfashion_video.mp4
 ```
 
-The video LoRA checkpoints are coming soon. The LoRA paths above are placeholders until checkpoints are published. Current video inference examples use 161 frames for 10-second generation; a 241-frame, 10-second version is planned.
+The video LoRA checkpoints are available at [ShineChen1024/DualViewFashion](https://huggingface.co/ShineChen1024/DualViewFashion). Current video inference examples use 161 frames for 10-second generation; a 241-frame, 10-second version is planned.
 
 ## Checkpoints
 
+Checkpoints are hosted on Hugging Face: [ShineChen1024/DualViewFashion](https://huggingface.co/ShineChen1024/DualViewFashion)
+
 | Model | Status |
 |---|---|
-| DualViewFashion low-resolution LoRA (512 x 384) | Coming soon |
+| DualViewFashion low-resolution LoRA (512 x 384) | [Available](https://huggingface.co/ShineChen1024/DualViewFashion) |
 | DualViewFashion high-resolution LoRA (1024 x 768) | Coming soon |
-| DualViewFashion Wan2.2 video LoRA | Coming soon |
+| DualViewFashion Wan2.2 video LoRA | [Available](https://huggingface.co/ShineChen1024/DualViewFashion) |
 | DualViewFashion dataset | Coming soon |
 
 ## Architecture
@@ -148,7 +150,7 @@ DualViewFashion adopts a two-stage resolution curriculum:
 - **Stage 1 - Low-Resolution Training (512 x 384).** The model first learns the canonical 7-region inpainting formulation, dual-view garment conditioning, and coarse cross-view correspondence at 512 x 384 resolution.
 - **Stage 2 - High-Resolution Training (1024 x 768).** Starting from the low-resolution model, we further fine-tune at 1024 x 768 resolution to improve garment texture fidelity, silhouette quality, view consistency, and back-view detail preservation.
 
-Both the low-resolution checkpoint and high-resolution checkpoint are coming soon. Training code and dataset release are also coming soon.
+Both the low-resolution checkpoint and high-resolution checkpoint are coming soon. Training code is available under the `train/` directory. Dataset release is coming soon.
 
 Future extensions include model-identity conditioning through the reserved identity placeholder and Wan2.2 multi-frame reference video training.
 
@@ -156,9 +158,22 @@ Future extensions include model-identity conditioning through the reserved ident
 
 ```text
 DualViewFashion/
-|-- inference.py              # FLUX-Fill image inference
-|-- video_inference.py        # Wan2.2 multi-frame reference video inference
-|-- assets/examples/          # Generated examples
+|-- inference.py                  # FLUX-Fill image inference (fixed prompt)
+|-- inference_caption.py          # FLUX-Fill image inference (caption prompt, LoRA)
+|-- inference_full_caption.py     # FLUX-Fill image inference (caption prompt, full model)
+|-- video_inference.py            # Wan2.2 multi-frame reference video inference
+|-- train/
+|   |-- finetune-mm-stage1.sh                        # LoRA training stage 1 (fixed prompt)
+|   |-- finetune-mm-stage2.sh                        # LoRA training stage 2 (fixed prompt)
+|   |-- finetune-mm-caption-stage1.sh                # LoRA training stage 1 (caption prompt)
+|   |-- finetune-mm-caption-stage2.sh                # LoRA training stage 2 (caption prompt)
+|   |-- finetune-mm-caption-stage1-full.sh           # Full training stage 1 (caption prompt)
+|   |-- finetune-mm-caption-stage2-full.sh           # Full training stage 2 (caption prompt)
+|   |-- finetune-multiview.py                        # LoRA training script (fixed prompt)
+|   |-- finetune-multiview-caption.py                # LoRA training script (caption prompt)
+|   |-- finetune-multiview-caption-full-deepspeed.py # Full training script (caption prompt)
+|   `-- ds_config_zero2.json                         # DeepSpeed ZeRO-2 config
+|-- assets/examples/              # Generated examples
 |-- requirements.txt
 |-- README.md
 `-- LICENSE

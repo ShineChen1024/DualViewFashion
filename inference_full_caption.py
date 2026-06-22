@@ -1,17 +1,9 @@
-"""DualViewFashion image inference.
-
-Generate synchronized multi-view fashion model images from dual-view garment
-references. The script builds a masked FLUX Fill canvas with garment reference
-views on the top row and asks the model to generate model views on the bottom
-row in a single forward pass.
-"""
-
 import argparse
 import inspect
 from pathlib import Path
 
 import torch
-from diffusers import FluxFillPipeline
+from diffusers import FluxFillPipeline, FluxTransformer2DModel
 from PIL import Image, ImageOps
 
 
@@ -22,19 +14,28 @@ DEFAULT_NEGATIVE_PROMPT = (
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="DualViewFashion image inference")
-    parser.add_argument("--garment_front", required=True, help="Path to the front-view garment reference image.")
-    parser.add_argument("--garment_back", required=True, help="Path to the back-view garment reference image.")
+    parser = argparse.ArgumentParser(description="Single-image multi-view inference (full model, caption prompt)")
+    parser.add_argument("--garment_front", required=True, help="Path to the front-view garment image.")
+    parser.add_argument("--garment_back", required=True, help="Path to the back-view garment image.")
     parser.add_argument(
         "--model_path",
-        default="black-forest-labs/FLUX.1-Fill-dev",
-        help="Base FLUX Fill model path or Hugging Face repo id.",
+        default="/home/work/MMSearch/cwf/search/model/FLUX.1-Fill-dev",
+        help="Base FLUX Fill model path.",
     )
-    parser.add_argument("--lora_path", required=True, help="Path to the DualViewFashion LoRA checkpoint.")
-    parser.add_argument("--output", default="dualviewfashion_output.png", help="Path for the generated output grid.")
-    parser.add_argument("--condition_output", default=None, help="Optional path for the masked condition canvas.")
-    parser.add_argument("--mask_output", default=None, help="Optional path for the generation mask.")
-    parser.add_argument("--prompt", default=None, help="Override the default generation prompt.")
+    parser.add_argument(
+        "--transformer_path",
+        required=True,
+        help="Path to the trained transformer directory (or parent dir containing a 'transformer' subfolder).",
+    )
+    parser.add_argument("--output", default="output.png", help="Path for the generated output image.")
+    parser.add_argument("--condition_output", default=None, help="Optional path to save the condition canvas.")
+    parser.add_argument("--mask_output", default=None, help="Optional path to save the generation mask.")
+    parser.add_argument("--cloth_type", default="garment", help="Garment category used in the prompt.")
+    parser.add_argument("--gender", default="female", help="Model gender/style token used in the prompt.")
+    parser.add_argument("--other_clothing", default="none", help="Optional paired clothing, e.g. jeans, skirt.")
+    parser.add_argument("--ref_framing", default="same", help="Optional reference framing note.")
+    parser.add_argument("--ref_extra_layers", default="none", help="Optional extra layers visible in references.")
+    parser.add_argument("--prompt", default=None, help="Override the automatically built prompt.")
     parser.add_argument("--negative_prompt", default=DEFAULT_NEGATIVE_PROMPT)
     parser.add_argument("--cloth_size", type=int, default=512, help="Reference slot size. 512 creates a 1536x1024 grid.")
     parser.add_argument("--steps", type=int, default=50)
@@ -67,13 +68,33 @@ def load_rgb(path):
     return ImageOps.exif_transpose(Image.open(path)).convert("RGB")
 
 
-PROMPT = "a 7-grid layout: top row shows clothing front, clothing back, and a gray placeholder; bottom row shows a model wearing the clothing in four views: reference, front, side, and back"
-
-
 def build_prompt(args):
     if args.prompt:
         return args.prompt
-    return PROMPT
+
+    cloth = args.cloth_type
+    gender = args.gender
+
+    prompt = (
+        f"a 7-grid layout: top row shows {cloth} front, {cloth} back, and a gray placeholder; "
+        f"bottom row shows a {gender} model wearing the {cloth}"
+    )
+
+    if args.other_clothing and args.other_clothing.lower() != "none":
+        prompt += f" with {args.other_clothing}"
+
+    prompt += " in four views: reference"
+
+    ref_details = []
+    if args.ref_framing and args.ref_framing != "same":
+        ref_details.append(f"{args.ref_framing} framing")
+    if args.ref_extra_layers and args.ref_extra_layers.lower() != "none":
+        ref_details.append(f"wearing additional {args.ref_extra_layers}")
+    if ref_details:
+        prompt += f" ({', '.join(ref_details)})"
+
+    prompt += ", front, side, and back"
+    return prompt
 
 
 def build_grid_and_mask(front_path, back_path, cloth_size):
@@ -94,17 +115,31 @@ def build_grid_and_mask(front_path, back_path, cloth_size):
     return grid, mask
 
 
+def resolve_transformer_path(path):
+    p = Path(path)
+    subfolder = p / "transformer"
+    if subfolder.is_dir():
+        return str(p), "transformer"
+    return str(p), None
+
+
 def load_pipeline(args):
     dtype = get_dtype(args.dtype)
-    load_kwargs = {"torch_dtype": dtype}
-    if args.device_map:
-        load_kwargs["device_map"] = args.device_map
 
-    pipe = FluxFillPipeline.from_pretrained(args.model_path, **load_kwargs)
-    if not args.device_map:
+    transformer_source, subfolder = resolve_transformer_path(args.transformer_path)
+    load_kwargs = {"torch_dtype": dtype}
+    if subfolder:
+        load_kwargs["subfolder"] = subfolder
+    transformer = FluxTransformer2DModel.from_pretrained(transformer_source, **load_kwargs)
+
+    pipe = FluxFillPipeline.from_pretrained(
+        args.model_path, transformer=transformer, torch_dtype=dtype,
+    )
+    if args.device_map:
+        pipe.to(device_map=args.device_map)
+    else:
         pipe.to(args.device)
 
-    pipe.load_lora_weights(args.lora_path)
     return pipe
 
 
@@ -123,7 +158,7 @@ def main():
         Path(args.mask_output).parent.mkdir(parents=True, exist_ok=True)
         mask.save(args.mask_output)
 
-    print("Loading DualViewFashion image pipeline...")
+    print("Loading pipeline (full model)...")
     pipe = load_pipeline(args)
     print(f"Prompt: {prompt}")
 
