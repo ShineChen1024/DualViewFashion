@@ -37,13 +37,15 @@ This is **not** a virtual try-on or person-inpainting pipeline. DualViewFashion 
 
 ## Examples
 
-The examples below are selected from the released full-parameter image checkpoints. Examples 1 and 2 use the 512 version, and Example 3 uses the large 1024 version trained from the 512 checkpoint. The output canvas contains the dual-view garment references in the first row and four generated model views in the second row. The top-right gray region is labeled `Future Model ID` to match the reserved model-identity placeholder style.
+The examples below are selected from the released full-parameter image checkpoints. The output canvas contains the dual-view garment references in the first row and four generated model views in the second row. The top-right gray region is labeled `Future Model ID` to match the reserved model-identity placeholder style.
 
-| Example | Checkpoint | Generated multi-view canvas |
-|:---:|:---:|:---:|
-| Example 1 | 512 full model | <img src="assets/examples/example_01.jpg" width="420"> |
-| Example 2 | 512 full model | <img src="assets/examples/example_02.jpg" width="420"> |
-| Example 3 | 1024 full model | <img src="assets/examples/example_03.jpg" width="640"> |
+| Example | Generated multi-view canvas |
+|:---:|:---:|
+| Example 1 | <img src="assets/examples/example_01.jpg" width="420"> |
+| Example 2 | <img src="assets/examples/example_02.jpg" width="420"> |
+| Example 3 | <img src="assets/examples/example_03.jpg" width="640"> |
+
+Examples 1 and 2 use the 512 full model. Example 3 uses the large 1024 full model trained from the 512 checkpoint.
 
 
 ### Video Example
