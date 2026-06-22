@@ -75,17 +75,17 @@ python inference_full_caption.py \
   --garment_front path/to/garment_front.jpg \
   --garment_back path/to/garment_back.jpg \
   --model_path path/to/FLUX.1-Fill-dev \
-  --transformer_path path/to/trained-full-multiview-caption-stage2/checkpoint-1000 \
+  --transformer_path path/to/trained-full-multiview-caption-stage1 \
   --output outputs/dualviewfashion_grid.png \
   --cloth_type "dress" \
   --gender "female" \
-  --cloth_size 1024 \
+  --cloth_size 512 \
   --steps 50 \
   --guidance_scale 30.0 \
   --seed 42
 ```
 
-Use `--transformer_path path/to/trained-full-multiview-caption-stage1` and `--cloth_size 512` for the 512 x 384 full-model checkpoint. Use `--transformer_path path/to/trained-full-multiview-caption-stage2/checkpoint-1000` and `--cloth_size 1024` for the 1024 x 768 full-model checkpoint. The 1024 version is initialized from the 512 version and trained for another 1000 steps.
+The default command uses the 512 x 384 full-model checkpoint. For the 1024 x 768 full-model checkpoint, use `--transformer_path path/to/trained-full-multiview-caption-stage2/checkpoint-1000` and `--cloth_size 1024`. The 1024 version is initialized from the 512 version and trained for another 1000 steps.
 
 The generated image is a single 7-region canvas. The bottom row contains four synchronized model renderings produced by one inpainting pass.
 
