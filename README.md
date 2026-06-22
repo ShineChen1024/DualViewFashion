@@ -41,9 +41,9 @@ The examples below are selected from the released full-parameter image checkpoin
 
 | Example | Generated multi-view canvas |
 |:---:|:---:|
-| Example 1<br>512 full model | <img src="assets/examples/example_01.jpg" width="420"> |
-| Example 2<br>512 full model | <img src="assets/examples/example_02.jpg" width="420"> |
-| Example 3<br>1024 full model<br>actively improving | <img src="assets/examples/example_03.jpg" width="640"> |
+| Example 1<br>(512 full model) | <img src="assets/examples/example_01.jpg" width="420"> |
+| Example 2<br>(512 full model) | <img src="assets/examples/example_02.jpg" width="420"> |
+| Example 3<br>(1024 full model, actively improving) | <img src="assets/examples/example_03.jpg" width="640"> |
 
 
 ### Video Example
