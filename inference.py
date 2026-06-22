@@ -39,7 +39,7 @@ def parse_args():
     parser.add_argument("--cloth_size", type=int, default=512, help="Reference slot size. 512 creates a 1536x1024 grid.")
     parser.add_argument("--steps", type=int, default=50)
     parser.add_argument("--guidance_scale", type=float, default=30.0)
-    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", default="cuda")
     parser.add_argument(
         "--device_map",

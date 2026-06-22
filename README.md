@@ -27,8 +27,8 @@ This is **not** a virtual try-on or person-inpainting pipeline. DualViewFashion 
 - [x] Image inference code release
 - [x] Wan2.2 multi-frame reference video inference code release
 - [x] Example gallery release
-- [x] Low-resolution checkpoint release (512 x 384)
-- [ ] High-resolution checkpoint release (1024 x 768)
+- [x] Low-resolution full-model checkpoint release (512 x 384)
+- [x] High-resolution full-model checkpoint ready (1024 x 768)
 - [x] Image training code release
 - [x] Wan2.2 video checkpoint release
 - [ ] Wan2.2 video training code release
@@ -37,13 +37,13 @@ This is **not** a virtual try-on or person-inpainting pipeline. DualViewFashion 
 
 ## Examples
 
-Each example below is generated from the 1024-resolution evaluation setting. The output canvas contains the dual-view garment references in the first row and four generated model views in the second row. The top-right gray region is the reserved model-identity slot, annotated here to indicate our future identity-control plan.
+The examples below are selected from the released full-parameter image checkpoints. Examples 1 and 2 use the 512 version, and Example 3 uses the large 1024 version trained from the 512 checkpoint. The output canvas contains the dual-view garment references in the first row and four generated model views in the second row. The top-right gray region is labeled `Future Model ID` to match the reserved model-identity placeholder style.
 
-| Example | Generated multi-view canvas |
-|:---:|:---:|
-| Example 1 | <img src="assets/examples/example_01.jpg" width="460"> |
-| Example 2 | <img src="assets/examples/example_02.jpg" width="460"> |
-| Example 3 | <img src="assets/examples/example_03.jpg" width="460"> |
+| Example | Checkpoint | Generated multi-view canvas |
+|:---:|:---:|:---:|
+| Example 1 | 512 full model | <img src="assets/examples/example_01.jpg" width="420"> |
+| Example 2 | 512 full model | <img src="assets/examples/example_02.jpg" width="420"> |
+| Example 3 | 1024 full model | <img src="assets/examples/example_03.jpg" width="640"> |
 
 
 ### Video Example
@@ -71,18 +71,21 @@ DualViewFashion image inference was tested with `diffusers` `0.39.0.dev0` and a 
 ### Image Inference
 
 ```bash
-python inference_caption.py \
+python inference_full_caption.py \
   --garment_front path/to/garment_front.jpg \
   --garment_back path/to/garment_back.jpg \
   --model_path path/to/FLUX.1-Fill-dev \
-  --lora_path ShineChen1024/DualViewFashion \
+  --transformer_path path/to/trained-full-multiview-caption-stage2/checkpoint-1000 \
   --output outputs/dualviewfashion_grid.png \
   --cloth_type "dress" \
   --gender "female" \
+  --cloth_size 1024 \
   --steps 50 \
   --guidance_scale 30.0 \
-  --seed 0
+  --seed 42
 ```
+
+Use `--transformer_path path/to/trained-full-multiview-caption-stage1` and `--cloth_size 512` for the 512 x 384 full-model checkpoint. Use `--transformer_path path/to/trained-full-multiview-caption-stage2/checkpoint-1000` and `--cloth_size 1024` for the 1024 x 768 full-model checkpoint. The 1024 version is initialized from the 512 version and trained for another 1000 steps.
 
 The generated image is a single 7-region canvas. The bottom row contains four synchronized model renderings produced by one inpainting pass.
 
@@ -105,12 +108,12 @@ The video LoRA checkpoints are available at [ShineChen1024/DualViewFashion](http
 
 Checkpoints are hosted on Hugging Face: [ShineChen1024/DualViewFashion](https://huggingface.co/ShineChen1024/DualViewFashion)
 
-| Model | Status |
-|---|---|
-| DualViewFashion low-resolution LoRA (512 x 384) | [Available](https://huggingface.co/ShineChen1024/DualViewFashion) |
-| DualViewFashion high-resolution LoRA (1024 x 768) | Coming soon |
-| DualViewFashion Wan2.2 video LoRA | [Available](https://huggingface.co/ShineChen1024/DualViewFashion) |
-| DualViewFashion dataset | Coming soon |
+| Model | Path | Status |
+|---|---|---|
+| DualViewFashion full model (512 x 384) | `trained-full-multiview-caption-stage1/transformer` | [Available](https://huggingface.co/ShineChen1024/DualViewFashion) |
+| DualViewFashion full model (1024 x 768) | `trained-full-multiview-caption-stage2/checkpoint-1000/transformer` | [Available](https://huggingface.co/ShineChen1024/DualViewFashion) |
+| DualViewFashion Wan2.2 video LoRA | - | [Available](https://huggingface.co/ShineChen1024/DualViewFashion) |
+| DualViewFashion dataset | - | Coming soon |
 
 ## Architecture
 
@@ -145,12 +148,12 @@ Masked Targets ->|                                                |
 
 ## Training
 
-DualViewFashion adopts a two-stage resolution curriculum:
+DualViewFashion adopts a two-stage full-parameter training curriculum for the image model:
 
 - **Stage 1 - Low-Resolution Training (512 x 384).** The model first learns the canonical 7-region inpainting formulation, dual-view garment conditioning, and coarse cross-view correspondence at 512 x 384 resolution.
-- **Stage 2 - High-Resolution Training (1024 x 768).** Starting from the low-resolution model, we further fine-tune at 1024 x 768 resolution to improve garment texture fidelity, silhouette quality, view consistency, and back-view detail preservation.
+- **Stage 2 - High-Resolution Training (1024 x 768).** Starting from the 512 x 384 full-model checkpoint, we continue full-parameter training at 1024 x 768 resolution for another 1000 steps to improve garment texture fidelity, silhouette quality, view consistency, and back-view detail preservation.
 
-Both the low-resolution checkpoint and high-resolution checkpoint are coming soon. Training code is available under the `train/` directory. Dataset release is coming soon.
+Both released image checkpoints are full FLUX transformer checkpoints, not LoRA adapters. Training code is available under the `train/` directory. Dataset release is coming soon.
 
 Future extensions include model-identity conditioning through the reserved identity placeholder and Wan2.2 multi-frame reference video training.
 
