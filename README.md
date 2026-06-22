@@ -41,11 +41,9 @@ The examples below are selected from the released full-parameter image checkpoin
 
 | Example | Generated multi-view canvas |
 |:---:|:---:|
-| Example 1 | <img src="assets/examples/example_01.jpg" width="420"> |
-| Example 2 | <img src="assets/examples/example_02.jpg" width="420"> |
-| Example 3 | <img src="assets/examples/example_03.jpg" width="640"> |
-
-Examples 1 and 2 use the 512 full model. Example 3 uses the large 1024 full model trained from the 512 checkpoint.
+| Example 1<br>512 full model | <img src="assets/examples/example_01.jpg" width="420"> |
+| Example 2<br>512 full model | <img src="assets/examples/example_02.jpg" width="420"> |
+| Example 3<br>1024 full model<br>actively improving | <img src="assets/examples/example_03.jpg" width="640"> |
 
 
 ### Video Example
